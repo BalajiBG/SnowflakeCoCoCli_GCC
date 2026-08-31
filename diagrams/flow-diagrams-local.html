@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="snowflake-source" content="cortex-agent-authored" />
+  <title>CoCoIceberg - Pipeline Flow Diagrams</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      max-width: 1200px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: 24px;
+      background: #ffffff; color: #1a1a2e;
+    }
+    h1 { text-align: center; font-size: 1.8rem; margin-bottom: 4px; }
+    h1 span { color: #29B5E8; }
+    h2 { font-size: 1.3rem; margin-top: 40px; border-bottom: 2px solid #29B5E8; padding-bottom: 8px; }
+    .subtitle { text-align: center; color: #6b7280; margin-bottom: 32px; font-size: 0.95rem; }
+    .mermaid { display: flex; justify-content: center; margin: 16px 0 32px; }
+    .mermaid svg { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+
+  <h1>CoCoIceberg - Pipeline <span>Flow Diagrams</span></h1>
+  <p class="subtitle">AI-Powered Risk & Compliance Copilot | Snowflake Hackathon 2026</p>
+
+  <h2>1. Ask CoCo - Multi-Agent AI Pipeline</h2>
+
+  <pre class="mermaid">
+flowchart LR
+    Q["User Question"] --> C1
+
+    subgraph PIPELINE["5-Step AI Pipeline"]
+        direction LR
+        C1["1. AI_CLASSIFY<br/><i>Intent Routing</i>"]
+        C2["2. Cortex Analyst<br/><i>NL to SQL</i>"]
+        C3["3. Cortex Search<br/><i>Policy RAG</i>"]
+        C4["4. Confidence<br/><i>Evidence Scoring</i>"]
+        C5["5. Governed LLM<br/><i>Cortex Complete</i>"]
+        C1 --> C2 --> C3 --> C4 --> C5
+    end
+
+    C5 --> R["AI Response<br/><i>Evidence + Citations<br/>+ Confidence Badge</i>"]
+
+    C1 -.- I1["FRAUD_AND_AML"]
+    C1 -.- I2["CREDIT_RISK"]
+    C1 -.- I3["LIQUIDITY_RISK"]
+    C1 -.- I4["REGULATORY_POLICY"]
+    C1 -.- I5["REPORT_GENERATION"]
+
+    C2 -.- SV["SV_RISK_COPILOT<br/><i>Semantic View</i>"]
+    C3 -.- PS["POLICY_SEARCH_SERVICE<br/><i>RBI / PMLA / Basel</i>"]
+
+    classDef step fill:#29B5E8,stroke:#0c7cd5,stroke-width:2px,color:#ffffff
+    classDef input fill:#e8f4fd,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    classDef intent fill:#fef9f0,stroke:#f59e0b,stroke-width:1px,color:#92400e,font-size:11px
+    classDef source fill:#f0f9ff,stroke:#29B5E8,stroke-width:1px,color:#0c4a6e,font-size:11px
+
+    class C1,C2,C3,C4,C5 step
+    class Q input
+    class R output
+    class I1,I2,I3,I4,I5 intent
+    class SV,PS source
+  </pre>
+
+  <h2>2. Dashboard AI Intelligence Pipeline</h2>
+  <p style="color:#6b7280;">Runs on AML Fraud, Credit Risk, Liquidity Risk, and Velocity Anomalies pages</p>
+
+  <pre class="mermaid">
+flowchart LR
+    PL["Page Load"] --> S1
+
+    subgraph DASH_PIPE["AI Intelligence Pipeline - Live Steps"]
+        direction LR
+        S1["1. Data Loading<br/><i>Fetch from Dynamic Tables</i>"]
+        S2["2. Profile Prep<br/><i>Extract key fields</i>"]
+        S3["3. Cortex LLM<br/><i>llama3.1-8b</i>"]
+        S1 --> S2 --> S3
+    end
+
+    S3 --> CARDS
+
+    subgraph CARDS["Colored Insight Cards"]
+        direction TB
+        RP["Risk Posture<br/><i>CRITICAL / HIGH / MEDIUM</i>"]
+        TH["Top Threats<br/><i>Named customers + reasons</i>"]
+        AC["Recommended Actions<br/><i>FREEZE / COLLECT / REPORT</i>"]
+    end
+
+    CARDS --> DT["Data Tables Below"]
+
+    classDef step fill:#29B5E8,stroke:#0c7cd5,stroke-width:2px,color:#ffffff
+    classDef input fill:#e8f4fd,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef risk fill:#fef2f2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
+    classDef threat fill:#fef9f0,stroke:#f59e0b,stroke-width:2px,color:#92400e
+    classDef action fill:#e8f4fd,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef data fill:#f3f4f6,stroke:#9ca3af,stroke-width:1px,color:#6b7280
+
+    class S1,S2,S3 step
+    class PL input
+    class RP risk
+    class TH threat
+    class AC action
+    class DT data
+  </pre>
+
+  <h2>3. Report Generation Pipeline</h2>
+  <p style="color:#6b7280;">Applies to all 4 report types: STR, CTR, LCR, CDD</p>
+
+  <pre class="mermaid">
+flowchart LR
+    SEL["Select Report Type<br/>+ Click Generate"] --> R1
+
+    subgraph RPT_PIPE["Report Generation Pipeline"]
+        direction LR
+        R1["1. Data Compilation<br/><i>Transactions, Accounts, KYC</i>"]
+        R2["2. Cortex LLM<br/><i>AI Narrative in<br/>regulatory language</i>"]
+        R3["3. PDF Builder<br/><i>FPDF2 + SHA-256 hash</i>"]
+        R1 --> R2 --> R3
+    end
+
+    R3 --> PDF["Downloadable PDF<br/><i>CONFIDENTIAL header<br/>Data tables + Narrative<br/>Signature blocks</i>"]
+
+    subgraph TYPES["Report Types"]
+        direction TB
+        STR["STR<br/><i>Suspicious Transaction</i>"]
+        CTR["CTR<br/><i>Cash Transaction</i>"]
+        LCR["LCR<br/><i>Basel III Liquidity</i>"]
+        CDD["CDD<br/><i>Customer Due Diligence</i>"]
+    end
+
+    TYPES --> SEL
+
+    classDef step fill:#29B5E8,stroke:#0c7cd5,stroke-width:2px,color:#ffffff
+    classDef input fill:#e8f4fd,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef output fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    classDef type fill:#1a1a2e,stroke:#1a1a2e,stroke-width:2px,color:#ffffff,font-size:12px
+
+    class R1,R2,R3 step
+    class SEL input
+    class PDF output
+    class STR,CTR,LCR,CDD type
+  </pre>
+
+  <h2>4. Investigation & Compliance Workflow</h2>
+
+  <pre class="mermaid">
+flowchart TB
+    ALERT["Alert Triggered<br/><i>OPEN status</i>"] --> INV
+
+    subgraph INV["Investigation Workspace"]
+        direction TB
+        SEL2["Select Alert"]
+        PROF["Review Customer Profile<br/><i>KYC + AML Score</i>"]
+        GEN["Generate AI Report<br/><i>Cortex Complete</i>"]
+        SEL2 --> PROF --> GEN
+    end
+
+    GEN --> ESC["Escalate Alert<br/><i>Stored Procedure</i>"]
+    GEN --> JIRA["Create Jira Ticket<br/><i>MCP Connector</i>"]
+    GEN --> RPT2["Generate Filing<br/><i>STR / CTR / LCR / CDD<br/>AI Narrative + PDF</i>"]
+
+    classDef alert fill:#fef2f2,stroke:#dc2626,stroke-width:2px,color:#7f1d1d
+    classDef inv fill:#e8f4fd,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef action fill:#1a1a2e,stroke:#1a1a2e,stroke-width:2px,color:#ffffff
+    classDef report fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+
+    class ALERT alert
+    class SEL2,PROF,GEN inv
+    class ESC,JIRA action
+    class RPT2 report
+  </pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.6/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#e8f4fd',
+        primaryBorderColor: '#29B5E8',
+        primaryTextColor: '#1a1a2e',
+        lineColor: '#29B5E8',
+        fontSize: '13px'
+      }
+    });
+  </script>
+</body>
+</html>

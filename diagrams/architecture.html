@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="snowflake-source" content="cortex-agent-authored" />
+  <title>CoCoIceberg - Solution Architecture</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      max-width: 1200px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: 24px;
+      background: #ffffff; color: #1a1a2e;
+    }
+    h1 { text-align: center; font-size: 1.8rem; margin-bottom: 4px; }
+    h1 span { color: #29B5E8; }
+    .subtitle { text-align: center; color: #6b7280; margin-bottom: 24px; font-size: 0.95rem; }
+    .mermaid { display: flex; justify-content: center; }
+    .mermaid svg { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+
+  <h1>CoCoIceberg - Solution <span>Architecture</span></h1>
+  <p class="subtitle">AI-Powered Risk & Compliance Copilot | Snowflake Hackathon 2026</p>
+
+  <pre class="mermaid">
+graph TB
+    subgraph FRONTEND["STREAMLIT IN SNOWFLAKE"]
+        direction TB
+        ASK["Ask CoCo<br/><i>NL Chat Copilot</i>"]
+        AML["AML Fraud<br/><i>AI Risk Intelligence</i>"]
+        CR["Credit Risk<br/><i>AI Credit Intelligence</i>"]
+        LR["Liquidity Risk<br/><i>AI Liquidity Intelligence</i>"]
+        VA["Velocity Anomalies<br/><i>AI Velocity Intelligence</i>"]
+        INV["Investigation<br/><i>Alert Deep-Dive</i>"]
+        RPT["Report Generator<br/><i>STR / CTR / LCR / CDD</i>"]
+    end
+
+    subgraph AI_INTEL["AI INTELLIGENCE LAYER"]
+        direction LR
+        PIPE["Live Pipeline Steps<br/><i>Step-by-step progress</i>"]
+        LLM_DASH["Cortex Complete<br/><i>llama3.1-8b</i>"]
+        CARDS["Colored Insight Cards<br/><i>Risk Posture / Threats / Actions</i>"]
+        PIPE --> LLM_DASH --> CARDS
+    end
+
+    subgraph CORTEX["CORTEX AI LAYER"]
+        direction LR
+        CLASSIFY["AI_CLASSIFY<br/><i>Intent Routing</i>"]
+        ANALYST["Cortex Analyst<br/><i>NL to SQL</i>"]
+        SEARCH["Cortex Search<br/><i>Policy RAG</i>"]
+        COMPLETE["Cortex Complete<br/><i>llama3.1-70b</i>"]
+        DOCAI["AI_PARSE_DOCUMENT<br/><i>Document Intelligence</i>"]
+    end
+
+    subgraph DATA["DATA LAYER"]
+        direction LR
+        DT1["V_AML_SCORING<br/><i>Dynamic Table</i>"]
+        DT2["V_CREDIT_RISK<br/><i>Dynamic Table</i>"]
+        DT3["V_LIQUIDITY_RISK<br/><i>Dynamic Table</i>"]
+        DT4["DT_TXN_VELOCITY<br/><i>Dynamic Table</i>"]
+        BASE["Base Tables<br/><i>CUSTOMERS | ACCOUNTS<br/>TRANSACTIONS | ALERTS</i>"]
+    end
+
+    subgraph SEMANTIC["SEMANTIC & SEARCH LAYER"]
+        direction LR
+        SV["SV_RISK_COPILOT<br/><i>Semantic View</i>"]
+        PSS["POLICY_SEARCH_SERVICE<br/><i>RBI / PMLA / Basel / FATF</i>"]
+    end
+
+    subgraph EXTERNAL["EXTERNAL INTEGRATIONS"]
+        direction LR
+        JIRA["MCP - Jira<br/><i>Compliance Tickets</i>"]
+        SKILL["CoCo CLI Skill<br/><i>Reusable & Shareable</i>"]
+        CRON["Cron Automation<br/><i>Daily Risk Monitoring</i>"]
+        PDF["PDF Export<br/><i>SHA-256 Integrity Hash</i>"]
+    end
+
+    AML --> AI_INTEL
+    CR --> AI_INTEL
+    LR --> AI_INTEL
+    VA --> AI_INTEL
+
+    ASK --> CORTEX
+    AI_INTEL --> CORTEX
+    RPT --> CORTEX
+
+    CORTEX --> DATA
+    CORTEX --> SEMANTIC
+    DATA --> BASE
+
+    INV --> JIRA
+    RPT --> PDF
+    ASK --> SKILL
+    CRON --> CORTEX
+
+    classDef frontend fill:#e8f4fd,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef aiintel fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#064e3b
+    classDef cortex fill:#29B5E8,stroke:#0c7cd5,stroke-width:2px,color:#ffffff
+    classDef data fill:#fef9f0,stroke:#f59e0b,stroke-width:2px,color:#92400e
+    classDef semantic fill:#f0f9ff,stroke:#29B5E8,stroke-width:2px,color:#0c4a6e
+    classDef external fill:#1a1a2e,stroke:#1a1a2e,stroke-width:2px,color:#ffffff
+
+    class ASK,AML,CR,LR,VA,INV,RPT frontend
+    class PIPE,LLM_DASH,CARDS aiintel
+    class CLASSIFY,ANALYST,SEARCH,COMPLETE,DOCAI cortex
+    class DT1,DT2,DT3,DT4,BASE data
+    class SV,PSS semantic
+    class JIRA,SKILL,CRON,PDF external
+  </pre>
+
+  <script src="/libs/mermaid@10.9.6/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#e8f4fd',
+        primaryBorderColor: '#29B5E8',
+        primaryTextColor: '#1a1a2e',
+        lineColor: '#29B5E8',
+        fontSize: '14px'
+      }
+    });
+  </script>
+</body>
+</html>
