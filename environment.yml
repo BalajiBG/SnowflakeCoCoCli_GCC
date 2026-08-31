@@ -1,0 +1,7 @@
+name: risk-copilot
+channels:
+  - snowflake
+dependencies:
+  - snowflake-snowpark-python
+  - streamlit
+  - fpdf2

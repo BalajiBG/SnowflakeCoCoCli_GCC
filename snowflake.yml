@@ -1,0 +1,16 @@
+definition_version: 2
+entities:
+  risk_copilot:
+    type: streamlit
+    identifier:
+      name: RISK_COMPLIANCE_COPILOT
+      schema: RISK_COPILOT
+      database: RISK_COPILOT_DB
+    main_file: Ask_CoCo.py
+    query_warehouse: COMPUTE_WH
+    pages_dir: pages/
+    artifacts:
+      - environment.yml
+      - cocoiceberg_logo.png
+      - sv_risk_copilot.yaml
+      - pages/
