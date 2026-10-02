@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 import re
-from fpdf import FPDF
+from pdf_helper import FPDF
 from snowflake.snowpark.context import get_active_session
 
 st.set_page_config(page_title="CoCoIceberg | Investigation", page_icon="🧊", layout="wide")
@@ -312,14 +312,33 @@ Produce a structured report:
             if st.button("🎫 Create Jira Ticket", use_container_width=True):
                 ticket_summary = f"[{alert_row['SEVERITY']}] {alert_row['ALERT_TYPE']} - {customer_id}"
                 ticket_desc = summary[:2000]
+                cust_name = customer.iloc[0]["FULL_NAME"] if not customer.empty else "Unknown"
+                from datetime import datetime
+                ticket_id = f"FOR-{selected_alert.replace('ALT','')}"
                 session.sql(f"""
                     INSERT INTO {DB}.{SCHEMA}.COMPLIANCE_TICKETS 
                     (ALERT_ID, CUSTOMER_ID, CUSTOMER_NAME, SEVERITY, SUMMARY, DESCRIPTION)
                     VALUES ('{selected_alert}', '{customer_id}', 
-                            '{customer.iloc[0]["FULL_NAME"] if not customer.empty else "Unknown"}',
+                            '{cust_name.replace(chr(39), chr(39)+chr(39))}',
                             '{alert_row["SEVERITY"]}', 
-                            '{ticket_summary.replace(chr(39), chr(39)+chr(39))}',
+                            '{ticket_id}: {ticket_summary.replace(chr(39), chr(39)+chr(39))}',
                             '{ticket_desc.replace(chr(39), chr(39)+chr(39))}')
                 """).collect()
-                st.success(f"Compliance ticket created for {selected_alert}. Pending Jira sync via MCP.")
+                sev_color = "#dc2626" if alert_row["SEVERITY"] == "CRITICAL" else "#f59e0b" if alert_row["SEVERITY"] == "HIGH" else "#29B5E8"
+                st.markdown(f"""
+                <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:16px 20px; margin-top:8px;">
+                    <div style="font-size:0.95rem; font-weight:700; color:#065f46;">✅ Jira Ticket Created</div>
+                    <div style="display:flex; gap:24px; margin-top:10px; flex-wrap:wrap;">
+                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Ticket</span><br><strong style="color:#1a1a2e;">{ticket_id}</strong></div>
+                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Alert</span><br><strong style="color:#1a1a2e;">{selected_alert}</strong></div>
+                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Severity</span><br><span style="background:{sev_color}20; color:{sev_color}; padding:2px 8px; border-radius:8px; font-weight:600; font-size:0.8rem;">{alert_row["SEVERITY"]}</span></div>
+                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Subject</span><br><strong style="color:#1a1a2e;">{cust_name}</strong></div>
+                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Created</span><br><strong style="color:#1a1a2e;">{datetime.now().strftime('%Y-%m-%d %H:%M')}</strong></div>
+                    </div>
+                    <div style="margin-top:10px; font-size:0.75rem; color:#059669;">
+                        📋 Logged to COMPLIANCE_TICKETS &nbsp;·&nbsp; 🔗 Syncing to Jira (FOR project) via MCP connector
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
 

@@ -1,6 +1,5 @@
 import streamlit as st
 import json
-import _snowflake
 from datetime import datetime
 from snowflake.snowpark.context import get_active_session
 
@@ -125,11 +124,12 @@ def classify_intent(question):
 
 def query_analyst(question):
     """Query Cortex Analyst using the semantic view."""
-    body = json.dumps({
-        "messages": [{"role": "user", "content": [{"type": "text", "text": question}]}],
-        "semantic_view": SEMANTIC_VIEW
-    })
     try:
+        import _snowflake
+        body = json.dumps({
+            "messages": [{"role": "user", "content": [{"type": "text", "text": question}]}],
+            "semantic_view": SEMANTIC_VIEW
+        })
         response = _snowflake.send_snow_api_request(
             "POST", "/api/v2/cortex/analyst/message", {}, {}, body, {}, 30000
         )

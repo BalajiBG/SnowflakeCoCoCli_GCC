@@ -13,4 +13,5 @@ entities:
       - environment.yml
       - cocoiceberg_logo.png
       - sv_risk_copilot.yaml
+      - pdf_helper.py
       - pages/

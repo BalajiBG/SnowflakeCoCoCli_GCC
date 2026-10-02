@@ -4,4 +4,3 @@ channels:
 dependencies:
   - snowflake-snowpark-python
   - streamlit
-  - fpdf2

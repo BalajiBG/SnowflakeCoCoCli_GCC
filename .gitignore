@@ -1,0 +1,19 @@
+# Secrets and credentials
+setup_jira_integration.sql
+setup_judge_access.sql
+
+# Deployment bundle (auto-generated)
+output/
+
+# Snowflake cache
+.snowflake/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

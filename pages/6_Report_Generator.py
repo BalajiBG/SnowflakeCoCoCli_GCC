@@ -5,7 +5,7 @@ import io
 import re
 from datetime import datetime
 from snowflake.snowpark.context import get_active_session
-from fpdf import FPDF
+from pdf_helper import FPDF
 
 st.set_page_config(page_title="CoCoIceberg | Reports", page_icon="🧊", layout="wide")
 session = get_active_session()
