@@ -73,8 +73,6 @@ st.markdown("""
     }
     .step-active { background: #e8f4fd; color: #0c7cd5; border: 1px solid #29B5E8; }
     .step-done { background: #ecfdf5; color: #059669; border: 1px solid #6ee7b7; }
-    footer { display: none; }
-    #MainMenu { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 

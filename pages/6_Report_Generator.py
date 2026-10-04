@@ -12,7 +12,33 @@ session = get_active_session()
 
 DB = "RISK_COPILOT_DB"
 SCHEMA = "RISK_COPILOT"
-LLM_MODEL = "llama3.1-8b"
+LLM_MODEL = "llama3.1-70b"
+_current_user = session.sql("SELECT CURRENT_USER() AS U").collect()[0]["U"]
+_report_date = datetime.now().strftime('%Y-%m-%d %H:%M IST')
+
+def _add_pdf_footer(pdf, pw, doc_hash, ref_label=""):
+    """Add a modern footer to any report PDF."""
+    pdf.ln(4)
+    pdf.set_draw_color(41, 181, 232)
+    pdf.line(10, pdf.get_y(), 10 + pw, pdf.get_y())
+    pdf.ln(4)
+    pdf.set_font("Helvetica", "B", 9)
+    pdf.set_text_color(26, 26, 46)
+    pdf.cell(pw/2, 5, f"Prepared By: {_current_user}")
+    pdf.cell(pw/2, 5, f"Date: {_report_date}", ln=True, align="R")
+    pdf.set_font("Helvetica", "", 8)
+    pdf.set_text_color(100, 100, 100)
+    pdf.cell(pw/2, 4, "CoCoIceberg AI Compliance Engine")
+    pdf.cell(pw/2, 4, "Powered by Snowflake Cortex", ln=True, align="R")
+    pdf.ln(4)
+    pdf.set_draw_color(220, 220, 220)
+    pdf.line(10, pdf.get_y(), 10 + pw, pdf.get_y())
+    pdf.ln(2)
+    pdf.set_font("Helvetica", "", 7)
+    pdf.set_text_color(150, 150, 150)
+    ref = f" | {ref_label}" if ref_label else ""
+    pdf.cell(pw, 4, f"CONFIDENTIAL | Hash: {doc_hash}{ref} | CoCoIceberg v1.0", ln=True, align="C")
+    pdf.cell(pw, 4, "This document is system-generated for compliance review purposes only.", ln=True, align="C")
 
 with st.sidebar:
     st.markdown("""
@@ -63,8 +89,6 @@ st.markdown("""
     }
     .step-active { background: #e8f4fd; color: #0c7cd5; border: 1px solid #29B5E8; }
     .step-done { background: #ecfdf5; color: #059669; border: 1px solid #6ee7b7; }
-    footer { display: none; }
-    #MainMenu { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -217,17 +241,16 @@ def generate_str_html(customer_info, alert_info, suspicious_txns, policies, str_
 <div class="stamp">
     <div class="left">
         <strong>Prepared By:</strong><br>
+        {_current_user}<br>
         CoCoIceberg AI Compliance Engine<br>
-        Powered by Snowflake Cortex<br><br>
-        <strong>Reviewing Officer:</strong><br>
-        ___________________________<br>
-        <span style="font-size:9pt;">Name & Designation</span>
+        Powered by Snowflake Cortex
     </div>
     <div class="right">
-        <strong>Authorized Signatory:</strong><br><br><br>
+        <strong>Report Date:</strong><br>
+        {filing_date}<br><br>
+        <strong>Authorized Signatory:</strong><br>
         ___________________________<br>
-        <span style="font-size:9pt;">Principal Officer / MLRO</span><br>
-        <span style="font-size:9pt;">Date: _______________</span>
+        <span style="font-size:9pt;">Principal Officer / MLRO</span>
     </div>
 </div>
 
@@ -310,8 +333,8 @@ Type: {customer_info['CUSTOMER_TYPE']} | KYC Risk: {customer_info['KYC_RISK_TIER
 Jurisdiction: {customer_info['JURISDICTION']} | Occupation: {customer_info['OCCUPATION']}
 Source of Funds: {customer_info['SOURCE_OF_FUNDS']} | Annual Income: {customer_info['ANNUAL_INCOME']}
 
-ALERTS: {json.dumps(alert_info, default=str)}
-SUSPICIOUS TRANSACTIONS: {json.dumps(suspicious_txns, default=str)}
+ALERTS: {json.dumps(alert_info[:5], default=str)}
+SUSPICIOUS TRANSACTIONS (top 10 by risk): {json.dumps(suspicious_txns[:10], default=str)}
 
 Write a detailed narrative that covers:
 1. How the suspicion first arose (which alert triggered investigation)
@@ -402,13 +425,13 @@ REQUIREMENTS:
         pdf.set_text_color(255, 255, 255)
         pdf.set_font("Helvetica", "B", 9)
         pdf.cell(pw, 7, "CONFIDENTIAL - RESTRICTED", ln=True, align="C", fill=True)
-        pdf.ln(4)
+        pdf.ln(2)
         pdf.set_text_color(26, 26, 46)
         pdf.set_font("Helvetica", "B", 16)
         pdf.cell(pw, 10, "SUSPICIOUS TRANSACTION REPORT", ln=True, align="C")
         pdf.set_font("Helvetica", "", 10)
         pdf.cell(pw, 6, "Filed under Prevention of Money Laundering Act, 2002 - Section 12", ln=True, align="C")
-        pdf.ln(6)
+        pdf.ln(4)
 
         # Doc metadata
         pdf.set_fill_color(248, 249, 250)
@@ -424,7 +447,7 @@ REQUIREMENTS:
             pdf.cell(40, 5, label + ":", fill=True)
             pdf.set_font("Helvetica", "", 9)
             pdf.cell(pw - 40, 5, value, ln=True, fill=True)
-        pdf.ln(6)
+        pdf.ln(3)
 
         # Part A - Subject Information
         pdf.set_font("Helvetica", "B", 12)
@@ -452,7 +475,7 @@ REQUIREMENTS:
             pdf.cell(50, 5, label)
             pdf.set_font("Helvetica", "", 9)
             pdf.cell(pw - 50, 5, value, ln=True)
-        pdf.ln(6)
+        pdf.ln(3)
 
         # Part B - Alert History
         pdf.set_font("Helvetica", "B", 12)
@@ -475,7 +498,7 @@ REQUIREMENTS:
             pdf.cell(col_widths_b[2], 5, str(a.get('SEVERITY', '')))
             pdf.cell(col_widths_b[3], 5, str(a.get('ALERT_DATE', ''))[:10])
             pdf.cell(col_widths_b[4], 5, str(a.get('DESCRIPTION', ''))[:60], ln=True)
-        pdf.ln(6)
+        pdf.ln(3)
 
         # Part C - Suspicious Transactions
         pdf.set_font("Helvetica", "B", 12)
@@ -506,7 +529,7 @@ REQUIREMENTS:
         total_amt = sum((t.get('AMOUNT') or 0) for t in suspicious_txns)
         pdf.set_font("Helvetica", "I", 8)
         pdf.cell(pw, 5, f"Total suspicious transactions: {len(suspicious_txns)} | Combined value: INR {total_amt:,.2f}", ln=True)
-        pdf.ln(6)
+        pdf.ln(3)
 
         # Part D - Narrative
         pdf.set_font("Helvetica", "B", 12)
@@ -521,7 +544,7 @@ REQUIREMENTS:
             if para:
                 pdf.multi_cell(pw, 4.5, para)
                 pdf.ln(2)
-        pdf.ln(4)
+        pdf.ln(3)
 
         # Part E - Regulatory Basis
         pdf.set_font("Helvetica", "B", 12)
@@ -533,8 +556,8 @@ REQUIREMENTS:
             pdf.cell(pw, 5, f"{p.get('REGULATION_NAME', '')} - {p.get('SECTION_TITLE', '')}", ln=True)
             pdf.set_font("Helvetica", "", 8)
             pdf.multi_cell(pw, 4, str(p.get('CONTENT', ''))[:500])
-            pdf.ln(3)
-        pdf.ln(4)
+            pdf.ln(2)
+        pdf.ln(3)
 
         # Part F - Declaration
         pdf.set_font("Helvetica", "B", 12)
@@ -548,26 +571,28 @@ REQUIREMENTS:
         pdf.cell(pw, 5, f"Document Integrity Hash: SHA-256: {doc_hash}", ln=True)
         pdf.cell(pw, 5, "Filing Deadline (PMLA Sec 12): Within 7 days of suspicion confirmation", ln=True)
         pdf.cell(pw, 5, "Tipping Off Prohibition: Under Section 66 of PMLA, disclosure to subject is prohibited.", ln=True)
-        pdf.ln(8)
 
-        # Signature block
-        pdf.set_font("Helvetica", "", 9)
-        pdf.cell(pw/2, 5, "Prepared By:")
-        pdf.cell(pw/2, 5, "Authorized Signatory:", ln=True)
-        pdf.cell(pw/2, 5, "CoCoIceberg AI Compliance Engine")
-        pdf.cell(pw/2, 5, "", ln=True)
-        pdf.ln(10)
-        pdf.cell(pw/2, 5, "___________________________")
-        pdf.cell(pw/2, 5, "___________________________", ln=True)
-        pdf.cell(pw/2, 5, "Reviewing Officer")
-        pdf.cell(pw/2, 5, "Principal Officer / MLRO", ln=True)
-
-        # Footer
-        pdf.ln(8)
-        pdf.set_font("Helvetica", "I", 7)
+        # Modern Footer
+        pdf.set_draw_color(41, 181, 232)
+        pdf.line(10, pdf.get_y(), 10 + pw, pdf.get_y())
+        pdf.ln(6)
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_text_color(26, 26, 46)
+        pdf.cell(pw/2, 5, f"Prepared By: {_current_user}")
+        pdf.cell(pw/2, 5, f"Date: {_report_date}", ln=True, align="R")
+        pdf.ln(2)
+        pdf.set_font("Helvetica", "", 8)
+        pdf.set_text_color(100, 100, 100)
+        pdf.cell(pw/2, 4, "CoCoIceberg AI Compliance Engine")
+        pdf.cell(pw/2, 4, "Powered by Snowflake Cortex", ln=True, align="R")
+        pdf.ln(6)
+        pdf.set_draw_color(220, 220, 220)
+        pdf.line(10, pdf.get_y(), 10 + pw, pdf.get_y())
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "", 7)
         pdf.set_text_color(150, 150, 150)
-        pdf.cell(pw, 4, "This document is system-generated and classified CONFIDENTIAL under PMLA 2002.", ln=True, align="C")
-        pdf.cell(pw, 4, f"Reference: {filing_ref} | Hash: {doc_hash} | System: CoCoIceberg v1.0", ln=True, align="C")
+        pdf.cell(pw, 4, f"CONFIDENTIAL | Ref: {filing_ref} | Hash: {doc_hash} | CoCoIceberg v1.0", ln=True, align="C")
+        pdf.cell(pw, 4, "This document is system-generated under PMLA 2002 for compliance review purposes only.", ln=True, align="C")
 
         pdf_bytes = bytes(pdf.output())
 
@@ -678,9 +703,7 @@ Write a brief CTR narrative covering:
             pdf.ln(4)
             pdf.set_font("Helvetica", "B", 9)
             pdf.cell(pw, 5, f"Document Hash: SHA-256: {doc_hash}", ln=True)
-            pdf.set_font("Helvetica", "I", 7)
-            pdf.set_text_color(150, 150, 150)
-            pdf.cell(pw, 4, "CONFIDENTIAL -- Generated by CoCoIceberg Compliance Intelligence System", ln=True, align="C")
+            _add_pdf_footer(pdf, pw, doc_hash)
 
             pdf_bytes = bytes(pdf.output())
             st.markdown('<span class="pipeline-step step-done">✓ PDF ready</span>', unsafe_allow_html=True)
@@ -802,9 +825,7 @@ Write a brief LCR report covering:
             pdf.ln(4)
             pdf.set_font("Helvetica", "B", 9)
             pdf.cell(pw, 5, f"Document Hash: SHA-256: {doc_hash}", ln=True)
-            pdf.set_font("Helvetica", "I", 7)
-            pdf.set_text_color(150, 150, 150)
-            pdf.cell(pw, 4, "CONFIDENTIAL -- Generated by CoCoIceberg Compliance Intelligence System", ln=True, align="C")
+            _add_pdf_footer(pdf, pw, doc_hash)
 
             pdf_bytes = bytes(pdf.output())
             st.markdown('<span class="pipeline-step step-done">✓ PDF ready</span>', unsafe_allow_html=True)
@@ -918,9 +939,7 @@ Write a brief EDD report covering:
             pdf.ln(4)
             pdf.set_font("Helvetica", "B", 9)
             pdf.cell(pw, 5, f"Document Hash: SHA-256: {doc_hash}", ln=True)
-            pdf.set_font("Helvetica", "I", 7)
-            pdf.set_text_color(150, 150, 150)
-            pdf.cell(pw, 4, "CONFIDENTIAL -- Generated by CoCoIceberg Compliance Intelligence System", ln=True, align="C")
+            _add_pdf_footer(pdf, pw, doc_hash)
 
             pdf_bytes = bytes(pdf.output())
             st.markdown('<span class="pipeline-step step-done">✓ PDF ready</span>', unsafe_allow_html=True)

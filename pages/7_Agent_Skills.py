@@ -70,8 +70,6 @@ st.markdown("""
     .grounding-title { font-size: 0.75rem; font-weight: 700; color: #29B5E8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
     .grounding-item { font-size: 0.78rem; color: #374151; padding: 3px 0; border-bottom: 1px dotted #e5e7eb; }
     .grounding-item:last-child { border-bottom: none; }
-    footer { display: none; }
-    #MainMenu { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 

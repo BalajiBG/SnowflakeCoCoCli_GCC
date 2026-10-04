@@ -94,10 +94,6 @@ st.markdown("""
     
     /* Expander */
     .streamlit-expanderHeader { font-weight: 600; color: #1a1a2e; }
-    
-    /* Hide default streamlit footer */
-    footer { display: none; }
-    #MainMenu { visibility: hidden; }
 </style>
 <script>
     window.addEventListener('load', function() {

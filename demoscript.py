@@ -16,7 +16,22 @@ Let me walk you through it.
 """
 
 # ============================================================================
-# PAGE 1: ASK COCO (30 seconds)
+# PAGE 1: OVERVIEW (15 seconds)
+# ============================================================================
+# [Show: Overview dashboard — KPIs, charts, AI executive summary]
+
+"""
+Before we dive into each risk domain, here's the Overview dashboard.
+
+WHAT: Six live KPI cards, daily transaction trends, alert distribution, 
+customer risk profiles, and an AI-generated executive summary.
+
+HOW: Every metric is queried live from the base tables and analytical views. 
+Cortex Complete generates the executive summary from the actual data on screen.
+"""
+
+# ============================================================================
+# PAGE 2: ASK COCO (30 seconds)
 # ============================================================================
 # [Show: Type a question like "Which customers have the highest AML risk?"]
 
@@ -31,13 +46,13 @@ This gives them instant answers with citations they can trust.
 
 HOW: Under the hood, it runs a five-step AI pipeline. First, AI_CLASSIFY routes 
 the intent. Then Cortex Analyst converts the question to SQL using our Semantic View. 
-Cortex Search retrieves relevant regulatory policies — sourced from both structured entries and real PDF documents parsed via AI_PARSE_DOCUMENT. A confidence assessor scores 
-the evidence. And finally, Cortex Complete synthesizes the answer with guardrails. 
+Cortex Search retrieves relevant regulatory policies — sourced from both structured entries and real PDF documents parsed via AI_PARSE_DOCUMENT. 
+A confidence assessor scores the evidence. And finally, Cortex Complete synthesizes the answer with guardrails. 
 You can see the confidence badge here — HIGH means multiple data sources confirmed it.
 """
 
 # ============================================================================
-# PAGE 2: AML FRAUD (25 seconds)
+# PAGE 3: AML FRAUD (25 seconds)
 # ============================================================================
 # [Show: AML Fraud dashboard — watch pipeline steps animate, then colored cards]
 
@@ -53,13 +68,14 @@ It names the specific customers who are dangerous, tells you why,
 and gives you three concrete actions — freeze this account, investigate that, 
 file a SAR for this customer. That's the difference between a BI tool and an AI copilot.
 
-HOW: Powered by Dynamic Tables that continuously recompute risk scores, 
+HOW: Powered by analytical views — V_AML_SCORING and V_FRAUD_SIGNALS — that compute 
+composite risk scores from customers, transactions, and alerts, 
 and Cortex Complete that analyzes the live data and generates actionable intelligence 
 in colored insight cards — Risk Posture, Top Threats, and Recommended Actions.
 """
 
 # ============================================================================
-# PAGE 3: CREDIT RISK (20 seconds)
+# PAGE 4: CREDIT RISK (20 seconds)
 # ============================================================================
 # [Show: Credit Risk dashboard — pipeline steps, then insight cards]
 
@@ -73,13 +89,13 @@ WHY: A compliance officer doesn't just want to see a table of accounts.
 They want to know — which account do I call first? Should I cut limits? 
 Do I need to report to the credit committee? The AI answers all three.
 
-HOW: V_CREDIT_RISK Dynamic Table feeds into Cortex Complete. 
+HOW: The V_CREDIT_RISK view computes NPA status and bounce tracking. 
 The colored cards show Portfolio Health status, Critical Accounts by name, 
 and specific collection and mitigation actions.
 """
 
 # ============================================================================
-# PAGE 4: LIQUIDITY RISK (20 seconds)
+# PAGE 5: LIQUIDITY RISK (20 seconds)
 # ============================================================================
 # [Show: Liquidity Risk dashboard — pipeline steps, then insight cards]
 
@@ -93,13 +109,13 @@ WHY: Treasury teams need to know immediately if outflows are concentrating,
 which accounts are draining fastest, and whether LCR thresholds are at risk. 
 The AI surfaces this without them having to analyze spreadsheets.
 
-HOW: V_LIQUIDITY_RISK Dynamic Table computes outflow-to-balance ratios. 
+HOW: The V_LIQUIDITY_RISK view computes outflow-to-balance ratios. 
 Cortex Complete identifies the highest-risk accounts and recommends 
 treasury actions, customer interventions, and regulatory reporting needs.
 """
 
 # ============================================================================
-# PAGE 5: VELOCITY ANOMALIES (20 seconds)
+# PAGE 6: VELOCITY ANOMALIES (20 seconds)
 # ============================================================================
 # [Show: Velocity Anomalies page — pipeline steps, then insight cards]
 
@@ -120,7 +136,7 @@ and generates the threat assessment with specific recommended actions.
 """
 
 # ============================================================================
-# PAGE 6: INVESTIGATION (30 seconds)
+# PAGE 7: INVESTIGATION (30 seconds)
 # ============================================================================
 # [Show: Select an alert, generate investigation report, click Create Jira Ticket]
 
@@ -136,14 +152,14 @@ with subject background, timeline, key findings, typology match, and recommendat
 
 HOW: Cortex Complete generates the report using evidence from cross-table SQL joins — 
 customers, accounts, transactions, and alerts all stitched together. 
-The AML composite score comes from our Dynamic Table. 
+The AML composite score comes from the V_AML_SCORING view. 
 And here's the MCP integration — when I click Create Jira Ticket, 
 it writes to our compliance table and syncs directly to Jira via the MCP connector. 
 That's a real ticket in our Jira board right now.
 """
 
 # ============================================================================
-# PAGE 7: REPORT GENERATOR (30 seconds)
+# PAGE 8: REPORT GENERATOR (30 seconds)
 # ============================================================================
 # [Show: Select CTR from dropdown, click Generate, watch pipeline, download PDF]
 
@@ -172,10 +188,12 @@ for audit trail verification. Every report type works the same way.
 # [Show: Sidebar with "Powered By" section visible]
 
 """
-And beyond the app itself — we use both structured and unstructured data: 5 real regulatory PDFs are parsed via AI_PARSE_DOCUMENT and indexed by Cortex Search alongside structured policy entries. 
-We've published this as a reusable CoCo skill that other teams can install. 
-We have a daily cron automation that monitors risk thresholds. 
-Three custom stored procedures the agent can call for real actions. 
+And beyond the app itself — we use both structured and unstructured data: 
+5 real regulatory PDFs are parsed via AI_PARSE_DOCUMENT and indexed 
+by Cortex Search alongside structured policy entries.
+The ESCALATE_ALERT stored procedure lets the system take real action on alerts.
+The Cortex Agent has three custom skills on stage for AML investigation, 
+regulatory reporting, and risk analytics.
 And guardrails throughout — input validation, confidence scoring, 
 and graceful fallbacks when evidence is thin.
 

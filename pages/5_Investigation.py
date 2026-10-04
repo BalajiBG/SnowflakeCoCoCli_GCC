@@ -10,6 +10,9 @@ session = get_active_session()
 DB = "RISK_COPILOT_DB"
 SCHEMA = "RISK_COPILOT"
 LLM_MODEL = "llama3.1-70b"
+from datetime import datetime
+_current_user = session.sql("SELECT CURRENT_USER() AS U").collect()[0]["U"]
+_report_date = datetime.now().strftime('%Y-%m-%d %H:%M IST')
 
 with st.sidebar:
     st.markdown("""
@@ -63,8 +66,6 @@ st.markdown("""
         font-size: 1.1rem; font-weight: 600; color: #1a1a2e;
         padding: 12px 0 8px; border-bottom: 2px solid #29B5E8; margin-bottom: 16px;
     }
-    footer { display: none; }
-    #MainMenu { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -172,10 +173,12 @@ Customer: {customer.iloc[0].to_dict() if not customer.empty else 'Unknown'}
 Transaction Profile: {json.dumps([r.as_dict() for r in txn_summary], default=str)}"""
 
             prompt = f"""You are a senior AML investigator producing a formal investigation report.
+Report Date: {_report_date}
+Investigator: {_current_user}
 
 {context}
 
-Produce a structured report:
+Produce a structured report (do NOT include a case number header, date, or investigator line — those are in the PDF metadata):
 ## Investigation Summary
 ### Subject & Background
 ### Alert Trigger & Timeline
@@ -222,6 +225,8 @@ Produce a structured report:
             ("Alert ID", selected_alert),
             ("Subject", customer.iloc[0]['FULL_NAME'] if not customer.empty else "Unknown"),
             ("Customer ID", customer_id),
+            ("Date", _report_date),
+            ("Investigator", _current_user),
             ("Severity", alert_row['SEVERITY']),
             ("Alert Type", alert_row['ALERT_TYPE']),
             ("Document Hash", _doc_hash),
@@ -270,27 +275,28 @@ Produce a structured report:
                 clean_line = re.sub(r'\*\*(.*?)\*\*', r'\1', line)
                 pdf.multi_cell(190, 5, clean_line)
 
-        # Footer
+        # Modern Footer
         pdf.ln(10)
-        pdf.set_draw_color(26, 26, 46)
+        pdf.set_draw_color(41, 181, 232)
         pdf.line(10, pdf.get_y(), 10 + pw, pdf.get_y())
-        pdf.ln(4)
-        pdf.set_font("Helvetica", "", 9)
+        pdf.ln(6)
+        pdf.set_font("Helvetica", "B", 9)
         pdf.set_text_color(26, 26, 46)
-        pdf.cell(pw/2, 5, "Prepared By:")
-        pdf.cell(pw/2, 5, "Reviewing Officer:", ln=True)
-        pdf.cell(pw/2, 5, "CoCoIceberg AI Compliance Engine")
-        pdf.cell(pw/2, 5, "", ln=True)
-        pdf.ln(8)
-        pdf.cell(pw/2, 5, "___________________________")
-        pdf.cell(pw/2, 5, "___________________________", ln=True)
-        pdf.cell(pw/2, 5, "System Generated")
-        pdf.cell(pw/2, 5, "Name & Designation", ln=True)
-        pdf.ln(8)
-        pdf.set_font("Helvetica", "I", 7)
+        pdf.cell(pw/2, 5, f"Prepared By: {_current_user}")
+        pdf.cell(pw/2, 5, f"Date: {_report_date}", ln=True, align="R")
+        pdf.ln(2)
+        pdf.set_font("Helvetica", "", 8)
+        pdf.set_text_color(100, 100, 100)
+        pdf.cell(pw/2, 4, "CoCoIceberg AI Compliance Engine")
+        pdf.cell(pw/2, 4, "Powered by Snowflake Cortex", ln=True, align="R")
+        pdf.ln(6)
+        pdf.set_draw_color(220, 220, 220)
+        pdf.line(10, pdf.get_y(), 10 + pw, pdf.get_y())
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "", 7)
         pdf.set_text_color(150, 150, 150)
-        pdf.cell(pw, 4, "This document is system-generated and classified CONFIDENTIAL.", ln=True, align="C")
-        pdf.cell(pw, 4, f"Alert: {selected_alert} | Hash: {_doc_hash} | System: CoCoIceberg v1.0", ln=True, align="C")
+        pdf.cell(pw, 4, f"CONFIDENTIAL | Alert: {selected_alert} | Hash: {_doc_hash} | CoCoIceberg v1.0", ln=True, align="C")
+        pdf.cell(pw, 4, "This document is system-generated for compliance review purposes only.", ln=True, align="C")
 
         pdf_bytes = bytes(pdf.output())
         st.download_button(
