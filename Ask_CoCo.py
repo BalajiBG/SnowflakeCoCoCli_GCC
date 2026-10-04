@@ -18,9 +18,11 @@ SEMANTIC_VIEW = "RISK_COPILOT_DB.RISK_COPILOT.SV_RISK_COPILOT"
 st.markdown("""
 <style>
     /* Global */
-    .stApp { background-color: #ffffff; }
+    .stApp { background-color: #ffffff; font-size: 1.15rem; }
     .block-container { padding-top: 0rem !important; padding-bottom: 0rem !important; }
-    section[data-testid="stSidebar"] { background-color: #f8fbff; border-right: 1px solid #e8f4fd; }
+    .stMarkdown, .stText, [data-testid="stMarkdownContainer"], p, li, td, th, label, .stSelectbox, .stTextInput { font-size: 1.1rem !important; }
+    [data-testid="stChatMessageContent"] p { font-size: 1.1rem !important; line-height: 1.7; }
+    section[data-testid="stSidebar"] { background-color: #f8fbff; border-right: 1px solid #e8f4fd; font-size: 1rem; }
     section[data-testid="stSidebar"] > div:first-child { padding-top: 0rem; }
     [data-testid="stSidebarNav"] { padding-top: 0rem; }
     

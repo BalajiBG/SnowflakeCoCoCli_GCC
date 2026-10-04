@@ -29,7 +29,8 @@ with st.sidebar:
 
 st.markdown("""
 <style>
-    .stApp { background-color: #ffffff; }
+    .stApp { background-color: #ffffff; font-size: 1.15rem; }
+    .stMarkdown, .stText, [data-testid="stMarkdownContainer"], p, li, td, th, label, .stSelectbox, .stTextInput { font-size: 1.1rem !important; }
     .block-container { padding-top: 0rem !important; padding-bottom: 0rem !important; }
     section[data-testid="stSidebar"] > div:first-child { padding-top: 0rem; }
     [data-testid="stSidebarNav"] { padding-top: 0rem; }
