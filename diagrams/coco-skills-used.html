@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="snowflake-source" content="cortex-agent-authored" />
+  <title>CoCoIceberg — CoCo CLI Skills Used</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      max-width: 780px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: clamp(16px, 4vw, 24px);
+      background: light-dark(#ffffff, #0f172a);
+      color: light-dark(#1f2937, #e5e7eb);
+    }
+    h1 { text-align: center; font-size: 1.3rem; margin-bottom: 2px; color: light-dark(#1a1a2e, #f1f5f9); }
+    .sub { text-align: center; font-size: 0.78rem; color: light-dark(#6b7280, #94a3b8); margin-bottom: 20px; }
+    .conn { display: flex; justify-content: center; }
+    .conn-line { width: 2px; height: 14px; background: #29B5E8; }
+    .conn-label { font-size: 0.65rem; color: #29B5E8; font-weight: 600; text-align: center; margin: 1px 0; }
+    .section-tag {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      text-align: center; margin: 14px 0 6px; color: light-dark(#9ca3af, #64748b);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+    .card { border-radius: 10px; padding: 14px; text-align: center; }
+    .card-icon { font-size: 1.1rem; }
+    .card-title { font-size: 0.78rem; font-weight: 700; margin: 4px 0; }
+    .card-sub { font-size: 0.65rem; line-height: 1.5; }
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e, #29B5E8); color: #fff;
+      border-radius: 14px; padding: 18px 24px; text-align: center;
+      box-shadow: 0 4px 16px rgba(41,181,232,0.25);
+    }
+    .hero-title { font-size: 1.2rem; font-weight: 800; }
+    .hero-sub { font-size: 0.75rem; opacity: 0.9; margin-top: 4px; }
+    .blue { background: light-dark(#dbeafe, #1e3a5f); border: 1px solid #93c5fd; color: light-dark(#1e40af, #93c5fd); }
+    .green { background: light-dark(#d1fae5, #064e3b); border: 1px solid #6ee7b7; color: light-dark(#065f46, #6ee7b7); }
+    .sky { background: light-dark(#f0f9ff, #0c4a6e); border: 1px solid #bae6fd; color: light-dark(#0c4a6e, #bae6fd); }
+    .amber { background: light-dark(#fef3c7, #78350f); border: 1px solid #fcd34d; color: light-dark(#92400e, #fcd34d); }
+    .purple { background: light-dark(#f3e8ff, #581c87); border: 1px solid #c084fc; color: light-dark(#6b21a8, #c084fc); }
+    .red { background: light-dark(#fef2f2, #7f1d1d); border: 1px solid #fca5a5; color: light-dark(#991b1b, #fca5a5); }
+    .rose { background: light-dark(#fff1f2, #881337); border: 1px solid #fda4af; color: light-dark(#9f1239, #fda4af); }
+    .arrow-row { display: flex; justify-content: center; align-items: center; gap: 6px; margin: 2px 0; }
+    .arrow-right { font-size: 0.7rem; color: #29B5E8; font-weight: 700; }
+    .target-chip {
+      display: inline-block; font-size: 0.62rem; font-weight: 600;
+      padding: 3px 8px; border-radius: 6px; margin: 2px;
+      background: light-dark(#f1f5f9, #334155); color: light-dark(#475569, #94a3b8);
+      border: 1px solid light-dark(#e2e8f0, #475569);
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧊 CoCo CLI Skills Used to Build CoCoIceberg</h1>
+<p class="sub">Each CoCo CLI skill and what it built in the solution</p>
+
+<!-- CoCo CLI -->
+<div class="hero">
+  <div class="hero-title">Cortex Code (CoCo CLI)</div>
+  <div class="hero-sub">AI coding agent that invoked specialized skills to build, deploy, and operate the entire solution</div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Invoked skills during build</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- APP DEVELOPMENT SKILLS -->
+<div class="section-tag">App Development Skills</div>
+<div class="grid2">
+  <div class="card blue">
+    <div class="card-icon">📱</div>
+    <div class="card-title">developing-with-streamlit-in-snowflake</div>
+    <div class="card-sub">Built & deployed the 9-page<br>Streamlit app via snow streamlit deploy</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">Ask_CoCo.py</span>
+      <span class="target-chip">pages/*.py</span>
+      <span class="target-chip">snowflake.yml</span>
+      <span class="target-chip">environment.yml</span>
+    </div>
+  </div>
+  <div class="card blue">
+    <div class="card-icon">✍️</div>
+    <div class="card-title">sql-author</div>
+    <div class="card-sub">Authored all SQL — tables, views,<br>dynamic tables, stored procedures,<br>data generation scripts</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">6 base tables</span>
+      <span class="target-chip">4 views</span>
+      <span class="target-chip">1 dynamic table</span>
+      <span class="target-chip">ESCALATE_ALERT proc</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- AI & SEMANTIC SKILLS -->
+<div class="section-tag">AI & Semantic Skills</div>
+<div class="grid3">
+  <div class="card green">
+    <div class="card-icon">📐</div>
+    <div class="card-title">agent-studio</div>
+    <div class="card-sub">Created the Semantic View<br>SV_RISK_COPILOT with DDL<br>4 tables · 35 dims · 9 metrics</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">SV_RISK_COPILOT</span>
+      <span class="target-chip">Cortex Analyst</span>
+    </div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">🤖</div>
+    <div class="card-title">cortex-ai-function-studio</div>
+    <div class="card-sub">Configured Cortex Complete,<br>AI_CLASSIFY, SEARCH_PREVIEW,<br>and AI_PARSE_DOCUMENT calls</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">CORTEX.COMPLETE</span>
+      <span class="target-chip">AI_CLASSIFY</span>
+      <span class="target-chip">SEARCH_PREVIEW</span>
+      <span class="target-chip">AI_PARSE_DOCUMENT</span>
+    </div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">🧩</div>
+    <div class="card-title">skill-development</div>
+    <div class="card-sub">Authored 3 Agent Skills<br>(SKILL.md files) and created<br>the Cortex Agent</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">RISK_COPILOT_AGENT</span>
+      <span class="target-chip">SKILL_STAGE</span>
+      <span class="target-chip">3 SKILL.md files</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- DATA & PIPELINE SKILLS -->
+<div class="section-tag">Data & Pipeline Skills</div>
+<div class="grid3">
+  <div class="card sky">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">dynamic-tables</div>
+    <div class="card-sub">Created DT_TXN_VELOCITY_MONITOR<br>with 1-min target lag for<br>real-time anomaly detection</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">DT_TXN_VELOCITY_MONITOR</span>
+    </div>
+  </div>
+  <div class="card sky">
+    <div class="card-icon">🔍</div>
+    <div class="card-title">data-governance</div>
+    <div class="card-sub">Set up RBAC — created<br>HACKATHON_JUDGE role with<br>scoped read + Cortex access</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">HACKATHON_JUDGE_ROLE</span>
+      <span class="target-chip">GRANT SELECT / USAGE</span>
+    </div>
+  </div>
+  <div class="card sky">
+    <div class="card-icon">🔐</div>
+    <div class="card-title">cortex-secrets</div>
+    <div class="card-sub">Managed Jira API token<br>stored securely for<br>MCP connector integration</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">jira-token</span>
+      <span class="target-chip">jira-email</span>
+      <span class="target-chip">jira-url</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- OPERATIONS SKILLS -->
+<div class="section-tag">Operations & Integration Skills</div>
+<div class="grid2">
+  <div class="card purple">
+    <div class="card-icon">🎫</div>
+    <div class="card-title">Jira MCP Connector</div>
+    <div class="card-sub">Syncs compliance tickets<br>from COMPLIANCE_TICKETS<br>table to Jira FOR project</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">mcp__jira__jira_post</span>
+      <span class="target-chip">FOR-5 · FOR-6 · FOR-7 · FOR-8</span>
+    </div>
+  </div>
+  <div class="card red">
+    <div class="card-icon">🔒</div>
+    <div class="card-title">guardrails-guide</div>
+    <div class="card-sub">Diagnosed RSS scope<br>restrictions during build<br>and guided workarounds</div>
+    <div style="margin-top:6px;">
+      <span class="target-chip">Restricted Session Scope</span>
+      <span class="target-chip">READ-ONLY diagnosis</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- OUTPUT -->
+<div class="section-tag">What These Skills Built Together</div>
+<div class="hero" style="background: linear-gradient(135deg, #059669, #29B5E8);">
+  <div class="hero-title">CoCoIceberg Risk & Compliance Copilot</div>
+  <div class="hero-sub">9 pages · 500 customers · 20,800 txns · Cortex Agent with 3 Skills · Jira MCP · PDF Reports · 5 Regulatory PDFs parsed via AI_PARSE_DOCUMENT</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="snowflake-source" content="cortex-agent-authored" />
+  <title>CoCoIceberg — Modular Components</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      max-width: 780px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: clamp(16px, 4vw, 24px);
+      background: light-dark(#ffffff, #0f172a);
+      color: light-dark(#1f2937, #e5e7eb);
+    }
+    h1 { text-align: center; font-size: 1.3rem; margin-bottom: 2px; color: light-dark(#1a1a2e, #f1f5f9); }
+    .sub { text-align: center; font-size: 0.78rem; color: light-dark(#6b7280, #94a3b8); margin-bottom: 20px; }
+    .conn { display: flex; justify-content: center; }
+    .conn-line { width: 2px; height: 14px; background: #29B5E8; }
+    .conn-label { font-size: 0.65rem; color: #29B5E8; font-weight: 600; text-align: center; margin: 1px 0; }
+    .section-tag {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      text-align: center; margin: 14px 0 6px; color: light-dark(#9ca3af, #64748b);
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .grid3,.grid4 { grid-template-columns: 1fr 1fr; } }
+    .card { border-radius: 10px; padding: 14px; text-align: center; }
+    .card-icon { font-size: 1.1rem; }
+    .card-title { font-size: 0.78rem; font-weight: 700; margin: 4px 0; }
+    .card-sub { font-size: 0.65rem; line-height: 1.5; }
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e, #29B5E8); color: #fff;
+      border-radius: 14px; padding: 18px 24px; text-align: center;
+      box-shadow: 0 4px 16px rgba(41,181,232,0.25);
+    }
+    .hero-title { font-size: 1.2rem; font-weight: 800; }
+    .hero-sub { font-size: 0.75rem; opacity: 0.9; margin-top: 4px; }
+    .blue { background: light-dark(#dbeafe, #1e3a5f); border: 1px solid #93c5fd; color: light-dark(#1e40af, #93c5fd); }
+    .green { background: light-dark(#d1fae5, #064e3b); border: 1px solid #6ee7b7; color: light-dark(#065f46, #6ee7b7); }
+    .sky { background: light-dark(#f0f9ff, #0c4a6e); border: 1px solid #bae6fd; color: light-dark(#0c4a6e, #bae6fd); }
+    .amber { background: light-dark(#fef3c7, #78350f); border: 1px solid #fcd34d; color: light-dark(#92400e, #fcd34d); }
+    .purple { background: light-dark(#f3e8ff, #581c87); border: 1px solid #c084fc; color: light-dark(#6b21a8, #c084fc); }
+    .red { background: light-dark(#fef2f2, #7f1d1d); border: 1px solid #fca5a5; color: light-dark(#991b1b, #fca5a5); }
+    .rose { background: light-dark(#fff1f2, #881337); border: 1px solid #fda4af; color: light-dark(#9f1239, #fda4af); }
+    .plug-label {
+      display: inline-block; font-size: 0.58rem; font-weight: 600;
+      padding: 2px 6px; border-radius: 4px; margin: 2px;
+      background: light-dark(#f1f5f9, #334155); color: light-dark(#475569, #94a3b8);
+      border: 1px solid light-dark(#e2e8f0, #475569);
+    }
+    .plug-out {
+      display: inline-block; font-size: 0.58rem; font-weight: 600;
+      padding: 2px 6px; border-radius: 4px; margin: 2px;
+      background: light-dark(rgba(41,181,232,0.1), rgba(41,181,232,0.2));
+      color: #29B5E8; border: 1px solid rgba(41,181,232,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<h1>CoCoIceberg — Modular Components</h1>
+<p class="sub">How each independent module plugs into the system via defined interfaces</p>
+
+<!-- MODULE 1: INTENT ROUTER -->
+<div class="section-tag">Entry Point</div>
+<div class="hero">
+  <div class="hero-title">Ask CoCo — Intent Router</div>
+  <div class="hero-sub">AI_CLASSIFY routes every question to the correct downstream module</div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Classified intent string</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- MODULE 2: AI SERVICES (3 parallel modules) -->
+<div class="section-tag">Pluggable AI Modules</div>
+<div class="grid3">
+  <div class="card blue">
+    <div class="card-icon">📊</div>
+    <div class="card-title">Cortex Analyst</div>
+    <div class="card-sub">NL-to-SQL engine</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: question text</span><br>
+      <span class="plug-out">OUT: SQL + explanation</span>
+    </div>
+  </div>
+  <div class="card blue">
+    <div class="card-icon">🔍</div>
+    <div class="card-title">Cortex Search</div>
+    <div class="card-sub">RAG retrieval (structured + PDF)</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: query string</span><br>
+      <span class="plug-out">OUT: ranked citations</span>
+    </div>
+  </div>
+  <div class="card blue">
+    <div class="card-icon">🤖</div>
+    <div class="card-title">Cortex Complete</div>
+    <div class="card-sub">Governed LLM synthesis</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: data + policies + prompt</span><br>
+      <span class="plug-out">OUT: grounded answer</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Each module called independently, results merged</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- MODULE 3: SEMANTIC LAYER -->
+<div class="section-tag">Pluggable Semantic Layer</div>
+<div class="grid2">
+  <div class="card sky">
+    <div class="card-icon">📐</div>
+    <div class="card-title">Semantic View</div>
+    <div class="card-sub">SV_RISK_COPILOT — single schema contract for Analyst</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: Analyst API call</span><br>
+      <span class="plug-out">OUT: validated SQL</span>
+    </div>
+  </div>
+  <div class="card sky">
+    <div class="card-icon">🔎</div>
+    <div class="card-title">Search Service</div>
+    <div class="card-sub">POLICY_SEARCH_SERVICE — 30 docs from structured + 5 PDFs</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: SEARCH_PREVIEW call</span><br>
+      <span class="plug-out">OUT: JSON results + SOURCE_FILE</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Reads from pluggable data sources</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- MODULE 4: DATA SOURCES -->
+<div class="section-tag">Pluggable Data Sources</div>
+<div class="grid4">
+  <div class="card green">
+    <div class="card-icon">🏦</div>
+    <div class="card-title">Structured Tables</div>
+    <div class="card-sub">CUSTOMERS · ACCOUNTS<br>TRANSACTIONS · ALERTS</div>
+    <div style="margin-top:6px;">
+      <span class="plug-out">Standard SQL interface</span>
+    </div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">📄</div>
+    <div class="card-title">PDF Documents</div>
+    <div class="card-sub">5 regulatory PDFs on<br>REGULATORY_DOCS_STAGE</div>
+    <div style="margin-top:6px;">
+      <span class="plug-out">AI_PARSE_DOCUMENT</span>
+    </div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">Dynamic Table</div>
+    <div class="card-sub">DT_TXN_VELOCITY_MONITOR<br>1-min target lag</div>
+    <div style="margin-top:6px;">
+      <span class="plug-out">Auto-refreshed view</span>
+    </div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">📊</div>
+    <div class="card-title">Computed Views</div>
+    <div class="card-sub">V_AML_SCORING<br>V_CREDIT · V_LIQUIDITY</div>
+    <div style="margin-top:6px;">
+      <span class="plug-out">Derived metrics</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Independent action modules</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- MODULE 5: ACTION MODULES -->
+<div class="section-tag">Pluggable Action Modules</div>
+<div class="grid4">
+  <div class="card purple">
+    <div class="card-icon">🎫</div>
+    <div class="card-title">Jira MCP</div>
+    <div class="card-sub">Ticket sync via<br>MCP connector</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: ticket row</span><br>
+      <span class="plug-out">OUT: Jira issue</span>
+    </div>
+  </div>
+  <div class="card amber">
+    <div class="card-icon">📋</div>
+    <div class="card-title">Report Generator</div>
+    <div class="card-sub">STR · CTR · LCR · CDD<br>PDF output</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: report type + data</span><br>
+      <span class="plug-out">OUT: downloadable PDF</span>
+    </div>
+  </div>
+  <div class="card red">
+    <div class="card-icon">🚨</div>
+    <div class="card-title">Alert Escalation</div>
+    <div class="card-sub">ESCALATE_ALERT<br>stored procedure</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: alert_id</span><br>
+      <span class="plug-out">OUT: status change</span>
+    </div>
+  </div>
+  <div class="card rose">
+    <div class="card-icon">🧩</div>
+    <div class="card-title">Agent Skills</div>
+    <div class="card-sub">3 SKILL.md on<br>SKILL_STAGE</div>
+    <div style="margin-top:6px;">
+      <span class="plug-label">IN: agent request</span><br>
+      <span class="plug-out">OUT: skill execution</span>
+    </div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- MODULARITY PRINCIPLE -->
+<div class="section-tag">Why This Is Modular</div>
+<div class="hero" style="background: linear-gradient(135deg, #059669, #29B5E8);">
+  <div class="hero-title">Swap any module without touching others</div>
+  <div class="hero-sub">Replace the LLM, add a new data source, swap Jira for ServiceNow, or add a new report type — each module has a defined IN/OUT contract</div>
+</div>
+
+</body>
+</html>

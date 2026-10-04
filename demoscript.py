@@ -31,7 +31,7 @@ This gives them instant answers with citations they can trust.
 
 HOW: Under the hood, it runs a five-step AI pipeline. First, AI_CLASSIFY routes 
 the intent. Then Cortex Analyst converts the question to SQL using our Semantic View. 
-Cortex Search retrieves relevant regulatory policies. A confidence assessor scores 
+Cortex Search retrieves relevant regulatory policies — sourced from both structured entries and real PDF documents parsed via AI_PARSE_DOCUMENT. A confidence assessor scores 
 the evidence. And finally, Cortex Complete synthesizes the answer with guardrails. 
 You can see the confidence badge here — HIGH means multiple data sources confirmed it.
 """
@@ -172,8 +172,7 @@ for audit trail verification. Every report type works the same way.
 # [Show: Sidebar with "Powered By" section visible]
 
 """
-And beyond the app itself — every dashboard page has AI Intelligence built in, 
-not just showing data but telling you what it means and what to do about it. 
+And beyond the app itself — we use both structured and unstructured data: 5 real regulatory PDFs are parsed via AI_PARSE_DOCUMENT and indexed by Cortex Search alongside structured policy entries. 
 We've published this as a reusable CoCo skill that other teams can install. 
 We have a daily cron automation that monitors risk thresholds. 
 Three custom stored procedures the agent can call for real actions. 

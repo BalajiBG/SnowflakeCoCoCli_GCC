@@ -155,7 +155,7 @@ def search_policies(query, limit=3):
         SELECT PARSE_JSON(
             SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
                 '{DB}.{SCHEMA}.{SEARCH_SERVICE}',
-                '{{"query": "{query.replace(chr(39), chr(39)+chr(39))}", "columns": ["CONTENT","REGULATION_NAME","SECTION_TITLE","CATEGORY"], "limit": {limit}}}'
+                '{{"query": "{query.replace(chr(39), chr(39)+chr(39))}", "columns": ["CONTENT","REGULATION_NAME","SECTION_TITLE","CATEGORY","SOURCE_FILE"], "limit": {limit}}}'
             )
         )['results'] AS results
     """).collect()
@@ -541,8 +541,10 @@ if user_input:
                     with tab2:
                         if policy_results:
                             for p in policy_results:
+                                source = p.get('SOURCE_FILE', '')
+                                source_badge = f"  `PDF: {source}`" if source and source != 'Manual Entry (Structured)' else ""
                                 st.markdown(f"""
-                                **{p.get('REGULATION_NAME','')}** — {p.get('SECTION_TITLE','')}
+                                **{p.get('REGULATION_NAME','')}** — {p.get('SECTION_TITLE','')}{source_badge}
                                 
                                 > {p.get('CONTENT','')[:500]}
                                 

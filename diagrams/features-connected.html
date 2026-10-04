@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="snowflake-source" content="cortex-agent-authored" />
+  <title>CoCoIceberg — Snowflake Features Connected</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, system-ui, sans-serif;
+      max-width: 780px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: clamp(16px, 4vw, 24px);
+      background: light-dark(#ffffff, #0f172a);
+      color: light-dark(#1f2937, #e5e7eb);
+    }
+    h1 { text-align: center; font-size: 1.4rem; margin-bottom: 2px; color: light-dark(#1a1a2e, #f1f5f9); }
+    .sub { text-align: center; font-size: 0.78rem; color: light-dark(#6b7280, #94a3b8); margin-bottom: 20px; }
+    .conn { display: flex; justify-content: center; }
+    .conn-line { width: 2px; height: 18px; background: #29B5E8; }
+    .conn-label { font-size: 0.68rem; color: #29B5E8; font-weight: 600; text-align: center; margin: 1px 0; }
+    .section-tag {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      text-align: center; margin: 14px 0 6px; color: light-dark(#9ca3af, #64748b);
+    }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+    .grid5 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 10px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .grid3,.grid4,.grid5 { grid-template-columns: 1fr 1fr; } }
+    .card { border-radius: 10px; padding: 14px; text-align: center; }
+    .card-icon { font-size: 1.2rem; }
+    .card-title { font-size: 0.82rem; font-weight: 700; margin: 4px 0; }
+    .card-sub { font-size: 0.68rem; line-height: 1.5; }
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e, #29B5E8); color: #fff;
+      border-radius: 14px; padding: 18px 24px; text-align: center;
+      box-shadow: 0 4px 16px rgba(41,181,232,0.25);
+    }
+    .hero-title { font-size: 1.3rem; font-weight: 800; }
+    .hero-sub { font-size: 0.78rem; opacity: 0.9; margin-top: 4px; }
+    .hero-detail { font-size: 0.68rem; opacity: 0.7; margin-top: 2px; }
+    .blue { background: light-dark(#dbeafe, #1e3a5f); border: 1px solid #93c5fd; color: light-dark(#1e40af, #93c5fd); }
+    .green { background: light-dark(#d1fae5, #064e3b); border: 1px solid #6ee7b7; color: light-dark(#065f46, #6ee7b7); }
+    .sky { background: light-dark(#f0f9ff, #0c4a6e); border: 1px solid #bae6fd; color: light-dark(#0c4a6e, #bae6fd); }
+    .amber { background: light-dark(#fef3c7, #78350f); border: 1px solid #fcd34d; color: light-dark(#92400e, #fcd34d); }
+    .purple { background: light-dark(#f3e8ff, #581c87); border: 1px solid #c084fc; color: light-dark(#6b21a8, #c084fc); }
+    .red { background: light-dark(#fef2f2, #7f1d1d); border: 1px solid #fca5a5; color: light-dark(#991b1b, #fca5a5); }
+    .dark-bar {
+      background: light-dark(#1a1a2e, #1e293b); border-radius: 10px; padding: 14px 20px; text-align: center;
+    }
+    .dark-label { font-size: 0.72rem; font-weight: 700; color: #29B5E8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .dark-chip { background: light-dark(rgba(41,181,232,0.12), rgba(41,181,232,0.2)); border-radius: 6px; padding: 8px; text-align: center; }
+    .dark-chip-t { font-size: 0.72rem; font-weight: 600; color: light-dark(#ffffff, #e2e8f0); }
+    .dark-chip-s { font-size: 0.6rem; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<h1>🧊 CoCoIceberg — Snowflake Features Connected</h1>
+<p class="sub">How each Snowflake-native feature connects in the data flow</p>
+
+<!-- STREAMLIT APP -->
+<div class="section-tag">User Interface</div>
+<div class="hero">
+  <div class="hero-title">Streamlit in Snowflake</div>
+  <div class="hero-sub">9 Pages · Multi-page Governed App · Deployed via snow streamlit deploy</div>
+  <div class="hero-detail">Ask CoCo · Overview · AML & Fraud · Credit Risk · Liquidity · Velocity · Investigation · Reports · Agent Skills</div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">User question / action</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- AI ROUTING -->
+<div class="section-tag">AI Intent Routing</div>
+<div class="card blue" style="max-width: 320px; margin: 0 auto;">
+  <div class="card-icon">🏷️</div>
+  <div class="card-title">AI_CLASSIFY</div>
+  <div class="card-sub">Routes questions to 6 intent categories<br>FRAUD_AND_AML · CREDIT_RISK · LIQUIDITY_RISK<br>REGULATORY_POLICY · REPORT_GENERATION · GENERAL</div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Routes to correct AI service</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- CORTEX AI SERVICES -->
+<div class="section-tag">Cortex AI Services</div>
+<div class="grid4">
+  <div class="card blue">
+    <div class="card-icon">📊</div>
+    <div class="card-title">Cortex Analyst</div>
+    <div class="card-sub">NL-to-SQL via<br>Semantic View</div>
+  </div>
+  <div class="card blue">
+    <div class="card-icon">🔍</div>
+    <div class="card-title">Cortex Search</div>
+    <div class="card-sub">Regulatory policy<br>RAG (structured + PDF)</div>
+  </div>
+  <div class="card blue">
+    <div class="card-icon">🤖</div>
+    <div class="card-title">Cortex Complete</div>
+    <div class="card-sub">LLM inference<br>llama3.1-8b / 70b</div>
+  </div>
+  <div class="card blue">
+    <div class="card-icon">🧩</div>
+    <div class="card-title">Cortex Agent</div>
+    <div class="card-sub">3 Skills<br>Plan · Execute · Reflect</div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Queries semantic view · retrieves policies · executes skills</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- SEMANTIC LAYER -->
+<div class="section-tag">Semantic & Search Layer</div>
+<div class="grid3">
+  <div class="card sky">
+    <div class="card-icon">📐</div>
+    <div class="card-title">SV_RISK_COPILOT</div>
+    <div class="card-sub">Semantic View<br>4 tables · 35 dimensions<br>9 metrics · 3 relationships</div>
+  </div>
+  <div class="card sky">
+    <div class="card-icon">🔎</div>
+    <div class="card-title">POLICY_SEARCH_SERVICE</div>
+    <div class="card-sub">Cortex Search Service<br>30 regulatory documents (5 PDF)<br>PMLA · RBI · FATF · Basel</div>
+  </div>
+  <div class="card sky">
+    <div class="card-icon">📁</div>
+    <div class="card-title">SKILL_STAGE</div>
+    <div class="card-sub">Agent Skills on Stage<br>AML Investigation<br>Reg Reporting · Analytics</div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">SQL joins & aggregations</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- ANALYTICS LAYER -->
+<div class="section-tag">Analytics & Compute Layer</div>
+<div class="grid5">
+  <div class="card green">
+    <div class="card-icon">📈</div>
+    <div class="card-title">V_AML_SCORING</div>
+    <div class="card-sub">Composite AML<br>risk scores</div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">🚨</div>
+    <div class="card-title">V_FRAUD_SIGNALS</div>
+    <div class="card-sub">Structuring &<br>round-tripping</div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">💳</div>
+    <div class="card-title">V_CREDIT_RISK</div>
+    <div class="card-sub">NPA detection<br>bounce tracking</div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">💧</div>
+    <div class="card-title">V_LIQUIDITY_RISK</div>
+    <div class="card-sub">Outflow ratios<br>stress levels</div>
+  </div>
+  <div class="card green">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">DT_VELOCITY</div>
+    <div class="card-sub">Dynamic Table<br>1-min target lag</div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Reads from base tables</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- DATA LAYER -->
+<div class="section-tag">Snowflake Data Layer</div>
+<div class="dark-bar">
+  <div class="dark-label">RISK_COPILOT_DB.RISK_COPILOT</div>
+  <div class="grid4" style="gap: 8px;">
+    <div class="dark-chip"><div class="dark-chip-t">CUSTOMERS</div><div class="dark-chip-s">500 customers</div></div>
+    <div class="dark-chip"><div class="dark-chip-t">ACCOUNTS</div><div class="dark-chip-s">1,500 accounts</div></div>
+    <div class="dark-chip"><div class="dark-chip-t">TRANSACTIONS</div><div class="dark-chip-s">20,800 txns</div></div>
+    <div class="dark-chip"><div class="dark-chip-t">ALERTS</div><div class="dark-chip-s">200 alerts</div></div>
+  </div>
+  <div class="grid3" style="gap: 8px; margin-top: 8px;">
+    <div class="dark-chip"><div class="dark-chip-t">REGULATORY_POLICIES</div><div class="dark-chip-s">30 docs (25 structured + 5 PDF)</div></div>
+    <div class="dark-chip"><div class="dark-chip-t">COMPLIANCE_TICKETS</div><div class="dark-chip-s">Jira sync queue</div></div>
+    <div class="dark-chip"><div class="dark-chip-t">REGULATORY_DOCS_STAGE</div><div class="dark-chip-s">5 PDFs · AI_PARSE_DOCUMENT</div></div>
+  </div>
+</div>
+
+<div class="conn"><div class="conn-line"></div></div>
+<div class="conn-label">Actions & external integrations</div>
+<div class="conn"><div class="conn-line"></div></div>
+
+<!-- EXTERNAL -->
+<div class="section-tag">External Integrations</div>
+<div class="grid3">
+  <div class="card purple">
+    <div class="card-icon">🎫</div>
+    <div class="card-title">Jira (MCP)</div>
+    <div class="card-sub">Compliance tickets<br>synced via MCP connector<br>to FOR project</div>
+  </div>
+  <div class="card amber">
+    <div class="card-icon">📄</div>
+    <div class="card-title">PDF Reports</div>
+    <div class="card-sub">STR · CTR · LCR · CDD<br>Investigation reports<br>Downloadable PDFs</div>
+  </div>
+  <div class="card red">
+    <div class="card-icon">⚠️</div>
+    <div class="card-title">Alert Escalation</div>
+    <div class="card-sub">ESCALATE_ALERT<br>stored procedure<br>Status → ESCALATED</div>
+  </div>
+</div>
+
+</body>
+</html>

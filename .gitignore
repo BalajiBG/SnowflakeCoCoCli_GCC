@@ -8,6 +8,9 @@ output/
 # Snowflake cache
 .snowflake/
 
+# Generated PDFs (uploaded to Snowflake stage)
+regulatory_docs/
+
 # Python
 __pycache__/
 *.pyc

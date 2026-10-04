@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="snowflake-source" content="cortex-agent-authored" />
+  <title>CoCoIceberg — System Architecture</title>
+  <script type="application/json" id="snowflake-report-metadata">
+  {
+    "generated": "2026-10-02",
+    "intent": "System architecture diagram for CoCoIceberg Risk & Compliance Copilot hackathon submission"
+  }
+  </script>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
+      max-width: 960px; width: 100%; box-sizing: border-box;
+      margin: 0 auto; padding: clamp(16px, 4vw, 24px);
+      background: light-dark(#ffffff, #0f172a);
+      color: light-dark(#1f2937, #e5e7eb);
+    }
+    h1 { text-align: center; font-size: 1.6rem; margin-bottom: 4px; color: light-dark(#1a1a2e, #f1f5f9); }
+    .subtitle { text-align: center; font-size: 0.85rem; color: light-dark(#6b7280, #94a3b8); margin-bottom: 24px; }
+    .connector { display: flex; justify-content: center; }
+    .connector .line { width: 2px; height: 20px; background: #29B5E8; }
+    .connector .arrow { width: 2px; height: 16px; background: #29B5E8; position: relative; }
+    .connector .arrow::after { content: ''; position: absolute; bottom: -4px; left: -4px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid #29B5E8; }
+    .row { display: grid; gap: 10px; margin: 0; }
+    .row-3 { grid-template-columns: repeat(3, 1fr); }
+    .row-2 { grid-template-columns: repeat(2, 1fr); }
+    .row-4 { grid-template-columns: repeat(4, 1fr); }
+    .row-5 { grid-template-columns: repeat(5, 1fr); }
+    @media (max-width: 600px) {
+      .row-3, .row-4, .row-5 { grid-template-columns: 1fr 1fr; }
+    }
+    .box {
+      border-radius: 10px; padding: 14px 16px; text-align: center;
+    }
+    .box-title { font-size: 0.82rem; font-weight: 700; margin: 4px 0; }
+    .box-sub { font-size: 0.68rem; line-height: 1.5; }
+    .box-icon { font-size: 1.2rem; }
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e, #29B5E8);
+      color: #fff; border-radius: 14px; padding: 20px 24px; text-align: center;
+      box-shadow: 0 4px 16px rgba(41,181,232,0.25);
+    }
+    .hero-title { font-size: 1.4rem; font-weight: 800; }
+    .hero-sub { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
+    .green { background: light-dark(#d1fae5, #064e3b); border: 1px solid #6ee7b7; color: light-dark(#065f46, #6ee7b7); }
+    .blue { background: light-dark(#dbeafe, #1e3a5f); border: 1px solid #93c5fd; color: light-dark(#1e40af, #93c5fd); }
+    .amber { background: light-dark(#fef3c7, #78350f); border: 1px solid #fcd34d; color: light-dark(#92400e, #fcd34d); }
+    .sky { background: light-dark(#f0f9ff, #0c4a6e); border: 1px solid #bae6fd; color: light-dark(#0c4a6e, #bae6fd); }
+    .red { background: light-dark(#fef2f2, #7f1d1d); border: 1px solid #fca5a5; color: light-dark(#991b1b, #fca5a5); }
+    .purple { background: light-dark(#f3e8ff, #581c87); border: 1px solid #c084fc; color: light-dark(#6b21a8, #c084fc); }
+    .dark { background: light-dark(#1a1a2e, #1e293b); border-radius: 10px; padding: 14px 20px; text-align: center; }
+    .dark-label { font-size: 0.72rem; font-weight: 700; color: #29B5E8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .dark-box { background: light-dark(rgba(41,181,232,0.12), rgba(41,181,232,0.2)); border-radius: 6px; padding: 8px; text-align: center; }
+    .dark-box-title { font-size: 0.72rem; font-weight: 600; color: light-dark(#ffffff, #e2e8f0); }
+    .dark-box-sub { font-size: 0.62rem; color: light-dark(#94a3b8, #94a3b8); }
+    .section-label {
+      font-size: 0.65rem; font-weight: 700; color: light-dark(#6b7280, #94a3b8);
+      letter-spacing: 1.5px; text-transform: uppercase; text-align: center;
+      margin: 16px 0 6px;
+    }
+    .flow-label { font-size: 0.7rem; color: #29B5E8; text-align: center; font-weight: 600; margin: 2px 0; }
+  </style>
+</head>
+<body>
+
+  <h1>🧊 CoCoIceberg — System Architecture</h1>
+  <p class="subtitle">Cortex-Powered Risk & Compliance Copilot — End-to-End Data Flow</p>
+
+  <!-- USER LAYER -->
+  <div class="section-label">User Interface Layer</div>
+  <div class="hero">
+    <div class="hero-title">Streamlit in Snowflake</div>
+    <div class="hero-sub">9 Pages — Ask CoCo · Overview · AML & Fraud · Credit Risk · Liquidity Risk · Velocity Anomalies · Investigation · Reports · Agent Skills</div>
+  </div>
+
+  <div class="connector"><div class="arrow"></div></div>
+  <div class="flow-label">User queries & interactions</div>
+  <div class="connector"><div class="arrow"></div></div>
+
+  <!-- AI LAYER -->
+  <div class="section-label">Cortex AI Layer</div>
+  <div class="row row-5">
+    <div class="box blue">
+      <div class="box-icon">🤖</div>
+      <div class="box-title">Cortex Complete</div>
+      <div class="box-sub">LLM inference<br>llama3.1-8b / 70b</div>
+    </div>
+    <div class="box blue">
+      <div class="box-icon">📊</div>
+      <div class="box-title">Cortex Analyst</div>
+      <div class="box-sub">NL-to-SQL via<br>Semantic View</div>
+    </div>
+    <div class="box blue">
+      <div class="box-icon">🔍</div>
+      <div class="box-title">Cortex Search</div>
+      <div class="box-sub">Policy RAG<br>structured + PDF</div>
+    </div>
+    <div class="box blue">
+      <div class="box-icon">🏷️</div>
+      <div class="box-title">AI_CLASSIFY</div>
+      <div class="box-sub">Intent routing<br>6 categories</div>
+    </div>
+    <div class="box blue">
+      <div class="box-icon">🧩</div>
+      <div class="box-title">Cortex Agent</div>
+      <div class="box-sub">3 Skills<br>orchestration</div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="arrow"></div></div>
+  <div class="flow-label">AI-generated SQL, insights & skill execution</div>
+  <div class="connector"><div class="arrow"></div></div>
+
+  <!-- SEMANTIC LAYER -->
+  <div class="section-label">Semantic & Search Layer</div>
+  <div class="row row-3">
+    <div class="box sky">
+      <div class="box-icon">📐</div>
+      <div class="box-title">SV_RISK_COPILOT</div>
+      <div class="box-sub">Semantic View<br>4 tables · 35 dims · 9 metrics<br>3 relationships</div>
+    </div>
+    <div class="box sky">
+      <div class="box-icon">🔎</div>
+      <div class="box-title">POLICY_SEARCH_SERVICE</div>
+      <div class="box-sub">Cortex Search Service<br>30 regulatory docs (5 from PDF)<br>PMLA · RBI · FATF · Basel</div>
+    </div>
+    <div class="box sky">
+      <div class="box-icon">📁</div>
+      <div class="box-title">SKILL_STAGE</div>
+      <div class="box-sub">Agent Skills<br>AML Investigation<br>Reg Reporting · Analytics</div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="arrow"></div></div>
+  <div class="flow-label">Queries, joins & aggregations</div>
+  <div class="connector"><div class="arrow"></div></div>
+
+  <!-- ANALYTICS LAYER -->
+  <div class="section-label">Analytics & Compute Layer</div>
+  <div class="row row-5">
+    <div class="box green">
+      <div class="box-icon">📈</div>
+      <div class="box-title">V_AML_SCORING</div>
+      <div class="box-sub">Composite AML<br>risk scores</div>
+    </div>
+    <div class="box green">
+      <div class="box-icon">🚨</div>
+      <div class="box-title">V_FRAUD_SIGNALS</div>
+      <div class="box-sub">Structuring &<br>round-tripping</div>
+    </div>
+    <div class="box green">
+      <div class="box-icon">💳</div>
+      <div class="box-title">V_CREDIT_RISK</div>
+      <div class="box-sub">NPA detection<br>bounce tracking</div>
+    </div>
+    <div class="box green">
+      <div class="box-icon">💧</div>
+      <div class="box-title">V_LIQUIDITY_RISK</div>
+      <div class="box-sub">Outflow ratios<br>stress levels</div>
+    </div>
+    <div class="box green">
+      <div class="box-icon">⚡</div>
+      <div class="box-title">DT_VELOCITY</div>
+      <div class="box-sub">Dynamic Table<br>1-min lag</div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="arrow"></div></div>
+  <div class="flow-label">Base table reads</div>
+  <div class="connector"><div class="arrow"></div></div>
+
+  <!-- DATA LAYER -->
+  <div class="section-label">Snowflake Data Layer</div>
+  <div class="dark">
+    <div class="dark-label">RISK_COPILOT_DB.RISK_COPILOT</div>
+    <div class="row row-4" style="gap: 8px;">
+      <div class="dark-box"><div class="dark-box-title">CUSTOMERS</div><div class="dark-box-sub">500 customers</div></div>
+      <div class="dark-box"><div class="dark-box-title">ACCOUNTS</div><div class="dark-box-sub">1,500 accounts</div></div>
+      <div class="dark-box"><div class="dark-box-title">TRANSACTIONS</div><div class="dark-box-sub">20,800 txns</div></div>
+      <div class="dark-box"><div class="dark-box-title">ALERTS</div><div class="dark-box-sub">200 alerts</div></div>
+    </div>
+    <div class="row row-3" style="gap: 8px; margin-top: 8px;">
+      <div class="dark-box"><div class="dark-box-title">REGULATORY_POLICIES</div><div class="dark-box-sub">30 docs (25 structured + 5 PDF)</div></div>
+      <div class="dark-box"><div class="dark-box-title">COMPLIANCE_TICKETS</div><div class="dark-box-sub">Jira sync queue</div></div>
+      <div class="dark-box"><div class="dark-box-title">REGULATORY_DOCS_STAGE</div><div class="dark-box-sub">5 PDFs · AI_PARSE_DOCUMENT</div></div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <!-- EXTERNAL INTEGRATION -->
+  <div class="section-label">External Integrations</div>
+  <div class="row row-3">
+    <div class="box purple">
+      <div class="box-icon">🎫</div>
+      <div class="box-title">Jira (MCP)</div>
+      <div class="box-sub">Compliance tickets<br>synced via MCP connector</div>
+    </div>
+    <div class="box amber">
+      <div class="box-icon">📄</div>
+      <div class="box-title">PDF Reports</div>
+      <div class="box-sub">STR · CTR · LCR · CDD<br>Investigation reports</div>
+    </div>
+    <div class="box red">
+      <div class="box-icon">⚠️</div>
+      <div class="box-title">Alert Escalation</div>
+      <div class="box-sub">ESCALATE_ALERT proc<br>Status → ESCALATED</div>
+    </div>
+  </div>
+
+</body>
+</html>

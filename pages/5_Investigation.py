@@ -305,40 +305,48 @@ Produce a structured report:
         st.markdown('<div class="section-header">Actions</div>', unsafe_allow_html=True)
         col_esc, col_tkt = st.columns(2)
         with col_esc:
-            if st.button("⚠️ Escalate Alert", use_container_width=True):
+            if st.button("⚠️ Escalate Alert", use_container_width=True, key="btn_escalate"):
                 session.sql(f"CALL {DB}.{SCHEMA}.ESCALATE_ALERT('{selected_alert}', 'Escalated via Investigation Workspace')").collect()
                 st.success(f"Alert {selected_alert} escalated.")
         with col_tkt:
-            if st.button("🎫 Create Jira Ticket", use_container_width=True):
+            if st.button("🎫 Create Jira Ticket", use_container_width=True, key="btn_jira"):
                 ticket_summary = f"[{alert_row['SEVERITY']}] {alert_row['ALERT_TYPE']} - {customer_id}"
                 ticket_desc = summary[:2000]
                 cust_name = customer.iloc[0]["FULL_NAME"] if not customer.empty else "Unknown"
-                from datetime import datetime
                 ticket_id = f"FOR-{selected_alert.replace('ALT','')}"
-                session.sql(f"""
-                    INSERT INTO {DB}.{SCHEMA}.COMPLIANCE_TICKETS 
-                    (ALERT_ID, CUSTOMER_ID, CUSTOMER_NAME, SEVERITY, SUMMARY, DESCRIPTION)
-                    VALUES ('{selected_alert}', '{customer_id}', 
-                            '{cust_name.replace(chr(39), chr(39)+chr(39))}',
-                            '{alert_row["SEVERITY"]}', 
-                            '{ticket_id}: {ticket_summary.replace(chr(39), chr(39)+chr(39))}',
-                            '{ticket_desc.replace(chr(39), chr(39)+chr(39))}')
-                """).collect()
-                sev_color = "#dc2626" if alert_row["SEVERITY"] == "CRITICAL" else "#f59e0b" if alert_row["SEVERITY"] == "HIGH" else "#29B5E8"
-                st.markdown(f"""
-                <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:16px 20px; margin-top:8px;">
-                    <div style="font-size:0.95rem; font-weight:700; color:#065f46;">✅ Jira Ticket Created</div>
-                    <div style="display:flex; gap:24px; margin-top:10px; flex-wrap:wrap;">
-                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Ticket</span><br><strong style="color:#1a1a2e;">{ticket_id}</strong></div>
-                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Alert</span><br><strong style="color:#1a1a2e;">{selected_alert}</strong></div>
-                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Severity</span><br><span style="background:{sev_color}20; color:{sev_color}; padding:2px 8px; border-radius:8px; font-weight:600; font-size:0.8rem;">{alert_row["SEVERITY"]}</span></div>
-                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Subject</span><br><strong style="color:#1a1a2e;">{cust_name}</strong></div>
-                        <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Created</span><br><strong style="color:#1a1a2e;">{datetime.now().strftime('%Y-%m-%d %H:%M')}</strong></div>
-                    </div>
-                    <div style="margin-top:10px; font-size:0.75rem; color:#059669;">
-                        📋 Logged to COMPLIANCE_TICKETS &nbsp;·&nbsp; 🔗 Syncing to Jira (FOR project) via MCP connector
-                    </div>
+                try:
+                    session.sql(f"""
+                        INSERT INTO {DB}.{SCHEMA}.COMPLIANCE_TICKETS 
+                        (ALERT_ID, CUSTOMER_ID, CUSTOMER_NAME, SEVERITY, SUMMARY, DESCRIPTION)
+                        VALUES ('{selected_alert}', '{customer_id}', 
+                                '{cust_name.replace(chr(39), chr(39)+chr(39))}',
+                                '{alert_row["SEVERITY"]}', 
+                                '{ticket_summary.replace(chr(39), chr(39)+chr(39))}',
+                                '{ticket_desc.replace(chr(39), chr(39)+chr(39))}')
+                    """).collect()
+                    st.session_state["jira_created"] = {"ticket_id": ticket_id, "alert": selected_alert, "severity": alert_row["SEVERITY"], "name": cust_name}
+                except Exception as e:
+                    st.error(f"Error creating ticket: {str(e)[:200]}")
+
+        # Show persistent Jira confirmation
+        if st.session_state.get("jira_created") and st.session_state["jira_created"].get("alert") == selected_alert:
+            from datetime import datetime
+            jc = st.session_state["jira_created"]
+            sev_color = "#dc2626" if jc["severity"] == "CRITICAL" else "#f59e0b" if jc["severity"] == "HIGH" else "#29B5E8"
+            st.markdown(f"""
+            <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:10px; padding:16px 20px; margin-top:8px;">
+                <div style="font-size:0.95rem; font-weight:700; color:#065f46;">✅ Jira Ticket Created</div>
+                <div style="display:flex; gap:24px; margin-top:10px; flex-wrap:wrap;">
+                    <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Ticket</span><br><strong style="color:#1a1a2e;">{jc["ticket_id"]}</strong></div>
+                    <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Alert</span><br><strong style="color:#1a1a2e;">{jc["alert"]}</strong></div>
+                    <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Severity</span><br><span style="background:{sev_color}20; color:{sev_color}; padding:2px 8px; border-radius:8px; font-weight:600; font-size:0.8rem;">{jc["severity"]}</span></div>
+                    <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Subject</span><br><strong style="color:#1a1a2e;">{jc["name"]}</strong></div>
+                    <div><span style="font-size:0.7rem; color:#6b7280; text-transform:uppercase;">Created</span><br><strong style="color:#1a1a2e;">{datetime.now().strftime('%Y-%m-%d %H:%M')}</strong></div>
                 </div>
-                """, unsafe_allow_html=True)
+                <div style="margin-top:10px; font-size:0.75rem; color:#059669;">
+                    📋 Logged to COMPLIANCE_TICKETS &nbsp;·&nbsp; 🔗 Syncing to Jira (FOR project) via MCP connector
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
 
